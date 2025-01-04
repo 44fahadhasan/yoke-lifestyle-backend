@@ -201,9 +201,9 @@ exports.userLogin = async (req, res) => {
       success: true,
       message: "Logged in successfully",
       data: {
-        name: user.name,
+        name: user.full_name,
         email: user.email,
-        phone: user.phone,
+        mobile: user.mobile,
         avatar: user.avatar,
         role: user.role,
       },
