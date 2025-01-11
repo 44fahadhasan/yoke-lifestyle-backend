@@ -8,7 +8,9 @@ const Categorie = require("../models/Categorie");
  */
 exports.getAllCategories = async (req, res) => {
   try {
-    const categories = await Categorie.find();
+    const categories = await Categorie.find({
+      parent_categorie: null,
+    }).populate("parent_categorie");
 
     res.status(200).json({
       success: true,
