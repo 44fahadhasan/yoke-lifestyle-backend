@@ -29,16 +29,6 @@ exports.getAllCategories = async (req, res) => {
  */
 exports.createCategorie = async (req, res) => {
   try {
-    const totalCategorieNumber = await Categorie.countDocuments();
-
-    if (totalCategorieNumber >= 1) {
-      return res.status(500).json({
-        success: false,
-        message:
-          "You can create maximum 1 categories. Please update an existing categorie",
-      });
-    }
-
     const categorie = await Categorie.create(req.body);
 
     res.status(201).json({

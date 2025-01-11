@@ -44,7 +44,6 @@ const categoriesSchema = new Schema(
     },
     slug_name: {
       type: String,
-      unique: true,
       trim: true,
       lowercase: true,
       required: [true, "Slug name is required"],
