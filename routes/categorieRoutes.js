@@ -17,11 +17,11 @@ const router = express.Router();
 router.get("/", categorieController.getAllCategories);
 
 /**
- * @route   PUT /api/categories
+ * @route   POST /api/categories
  * @desc    Create a new categorie
  * @access  Private(admin)
  */
-router.put(
+router.post(
   "/",
   authenticateToken,
   checkIfAdmin,
