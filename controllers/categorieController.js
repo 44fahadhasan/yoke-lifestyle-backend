@@ -41,8 +41,6 @@ exports.getAllCategories = async (req, res) => {
     const sortOptions = {};
 
     if (sort) {
-      if (sort.toLowerCase() === "default") {
-      }
       if (sort.toLowerCase() === "newest") {
         sortOptions.createdAt = -1;
       }
