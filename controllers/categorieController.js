@@ -4,23 +4,141 @@ const Categorie = require("../models/Categorie");
 /**
  * @route   GET /api/categories
  * @desc    Retrieve all categories
- * @access  Public
+ * @access  Private(admin)
  */
 exports.getAllCategories = async (req, res) => {
   try {
-    const categories = await Categorie.find({
-      parent_categorie: null,
-    }).populate("parent_categorie");
+    // destructure query parameters with default values
+    const { search, featured, status, sort, page = 0, size = 6 } = req.query;
+
+    // pagination settings
+    const perPageCategories = parseInt(size);
+    const currentPage = parseInt(page);
+    const skipCategories = currentPage * perPageCategories;
+
+    // the query object
+    const query = {};
+
+    // search by search text (category name or slug/path)
+    if (search) {
+      query.$or = [
+        { categorie_name: { $regex: search, $options: "i" } },
+        { slug_name: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    // filter by featured categorie
+    if (featured) {
+      query.featured_categorie = { $regex: featured, $options: "i" };
+    }
+
+    // filter by status
+    if (status) {
+      query.status = { $regex: status, $options: "i" };
+    }
+
+    // the sort object
+    const sortOptions = {};
+
+    if (sort) {
+      if (sort.toLowerCase() === "default") {
+      }
+      if (sort.toLowerCase() === "newest") {
+        sortOptions.createdAt = -1;
+      }
+      if (sort.toLowerCase() === "oldest") {
+        sortOptions.createdAt = 1;
+      }
+    }
+
+    // find categories with pagination
+    const categories = await Categorie.find(query)
+      .select(
+        "_id categorie_name slug_name status featured_categorie createdAt"
+      )
+      .sort(sortOptions)
+      .skip(skipCategories)
+      .limit(perPageCategories);
+
+    // count total categories matching the query
+    const totalCategoriesNumber = await Categorie.countDocuments(query);
 
     res.status(200).json({
       success: true,
       message: "Categories fetch successfully",
+      totalCategories: totalCategoriesNumber,
       data: categories,
     });
   } catch (error) {
     res
       .status(500)
       .json({ success: false, message: "Failed to fetch categories" });
+  }
+};
+
+/**
+ * @route   GET /api/categories/list
+ * @desc    Retrieve all categories list
+ * @access  Private(admin)
+ */
+exports.getAllCategoriesList = async (req, res) => {
+  try {
+    const categories_list = await Categorie.find({
+      status: "published",
+    }).select("_id categorie_name");
+
+    // modify data
+    const modified_categories_list = categories_list?.map(
+      ({ categorie_name, _id }) => ({
+        label: categorie_name,
+        value: categorie_name,
+        _id,
+      })
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Categories list fetch successfully",
+      data: modified_categories_list,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to fetch categories list" });
+  }
+};
+
+/**
+ * @route   GET /api/categories/details/:id
+ * @desc    Retrieve a single categorie details by ID
+ * @access  Private(admin)
+ */
+exports.getCategorieDetailstById = async (req, res) => {
+  try {
+    const categorie = await Categorie.findById(req.params.id);
+
+    if (!categorie) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Categorie not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Categorie fetch successfully",
+      data: categorie,
+    });
+  } catch (error) {
+    if (error.kind === "ObjectId") {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid categorie ID format" });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch categorie",
+    });
   }
 };
 

@@ -12,9 +12,38 @@ const router = express.Router();
 /**
  * @route   GET /api/categories
  * @desc    Retrieve all categories
- * @access  Public
+ * @access  Private(admin)
  */
-router.get("/", categorieController.getAllCategories);
+router.get(
+  "/",
+  authenticateToken,
+  checkIfAdmin,
+  categorieController.getAllCategories
+);
+
+/**
+ * @route   GET /api/categories/list
+ * @desc    Retrieve all categories list
+ * @access  Private(admin)
+ */
+router.get(
+  "/list",
+  authenticateToken,
+  checkIfAdmin,
+  categorieController.getAllCategoriesList
+);
+
+/**
+ * @route   GET /api/categories/details/:id
+ * @desc    Retrieve a single categorie details by ID
+ * @access  Private(admin)
+ */
+router.get(
+  "/details/:id",
+  authenticateToken,
+  checkIfAdmin,
+  categorieController.getCategorieDetailstById
+);
 
 /**
  * @route   POST /api/categories

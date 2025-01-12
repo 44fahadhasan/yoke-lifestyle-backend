@@ -61,6 +61,14 @@ const categoriesSchema = new Schema(
       ref: "Categorie",
       default: null,
     },
+    featured_categorie: {
+      type: String,
+      enum: {
+        values: ["yes", "no"],
+        message: 'Featured categorie must be either "yes" or "no".',
+      },
+      default: "no",
+    },
     meta_info: {
       type: [metaSchema],
     },
