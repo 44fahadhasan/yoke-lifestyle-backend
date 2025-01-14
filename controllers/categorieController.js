@@ -97,7 +97,14 @@ exports.getAllCategoriesList = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Categories list fetch successfully",
-      data: modified_categories_list,
+      data: [
+        ...modified_categories_list,
+        {
+          label: "No Parent Category",
+          value: null,
+          _id: null,
+        },
+      ],
     });
   } catch (error) {
     res
