@@ -3,23 +3,20 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 // Define the meta schema
-const metaSchema = new Schema(
-  {
-    name: {
-      type: String,
-      trim: true,
-    },
-    property: {
-      type: String,
-      trim: true,
-    },
-    content: {
-      type: String,
-      trim: true,
-    },
+const metaSchema = new Schema({
+  name: {
+    type: String,
+    trim: true,
   },
-  { _id: false } // Disables _id creation for subdocuments.
-);
+  property: {
+    type: String,
+    trim: true,
+  },
+  content: {
+    type: String,
+    trim: true,
+  },
+});
 
 // Define the categories schema
 const categoriesSchema = new Schema(
