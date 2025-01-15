@@ -2,53 +2,67 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-// Define the attribute value schema
-const attributeValueSchema = new Schema({
+// Define the attribute values schema
+const attributeValuesSchema = new Schema({
   value: {
     type: String,
-    required: [true, "Attribute value is required."],
     unique: true,
     trim: true,
+    required: [true, "Attribute value is required."],
   },
-});
-
-// Define the product attribute schema
-const productAttributeSchema = new Schema({
-  attributeTitle: {
-    type: String,
-    required: true,
-    trim: true,
-    required: [true, "Attribute title name is required"],
-  },
-  attributeValue: [attributeValueSchema],
 });
 
 // Define the product attributes schema
 const productAttributesSchema = new Schema(
   {
-    productAttributes: {
-      type: [productAttributeSchema],
+    attribute_name: {
+      type: String,
+      unique: true,
+      trim: true,
+      required: [true, "Attribute name is required"],
+    },
+    attribute_values: {
+      type: [attributeValuesSchema],
       validate: {
         validator: function (value) {
-          // Ensure at least one product attribute exists
+          // Ensure at least one attribute value exists
           return value.length > 0;
         },
-        message: "At least one product attribute is required.",
+        message: "At least one attribute value is required.",
       },
+    },
+    global_attributes: {
+      type: String,
+      enum: {
+        values: ["yes", "no"],
+        message: 'global attribute must be either "yes" or "no".',
+      },
+      default: "yes",
+    },
+    category_specific_attributes: {
+      type: Schema.Types.ObjectId,
+      ref: "Categorie",
+      default: null,
     },
     email: {
       type: String,
-      required: [true, "Email is required"],
       lowercase: true,
+      trim: true,
+      required: [true, "Email is required"],
       match: [
         /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-        "Please enter a valid email address",
+        "Please enter a valid email address.",
       ],
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+      immutable: true, // Ensures createdAt cannot be changed
     },
   },
   {
-    timestamps: true,
-    versionKey: false,
+    timestamps: true, // Adds createdAt and updatedAt fields
+    versionKey: false, // Removes the __v field
   }
 );
 

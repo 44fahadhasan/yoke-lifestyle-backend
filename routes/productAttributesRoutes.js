@@ -22,14 +22,14 @@ router.get(
 );
 
 /**
- * @route   PUT /api/product-attributes
+ * @route   POST /api/product-attributes
  * @desc    Create a new product attribute
  * @access  Private(admin)
  */
-router.put(
+router.post(
   "/",
-  authenticateToken,
-  checkIfAdmin,
+  // authenticateToken,
+  // checkIfAdmin,
   productAttributesController.createProductAttribute
 );
 

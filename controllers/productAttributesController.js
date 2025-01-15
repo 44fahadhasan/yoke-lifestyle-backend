@@ -29,16 +29,16 @@ exports.getAllProductAttributes = async (req, res) => {
  */
 exports.createProductAttribute = async (req, res) => {
   try {
-    const totalProductAttributesNumber =
-      await ProductAttribute.countDocuments();
+    // const totalProductAttributesNumber =
+    //   await ProductAttribute.countDocuments();
 
-    if (totalProductAttributesNumber >= 1) {
-      return res.status(500).json({
-        success: false,
-        message:
-          "You can create maximum 1 product attributes. Please update an existing product attribute",
-      });
-    }
+    // if (totalProductAttributesNumber >= 1) {
+    //   return res.status(500).json({
+    //     success: false,
+    //     message:
+    //       "You can create maximum 1 product attributes. Please update an existing product attribute",
+    //   });
+    // }
 
     const productAttribute = await ProductAttribute.create(req.body);
 
