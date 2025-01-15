@@ -10,6 +10,20 @@ const { checkIfAdmin } = require("../middleware/common/authorization");
 const router = express.Router();
 
 /**
+ * @route   GET /api/categories/parent
+ * @desc    Retrieve all parent categories
+ * @access  Public
+ */
+router.get("/parent", categorieController.getAllParentCategories);
+
+/**
+ * @route   GET /api/categories/:parentId/children
+ * @desc    Retrieve all children categories of any parent categorie
+ * @access  Public
+ */
+router.get("/:parentId/children", categorieController.getAllChildrenCategories);
+
+/**
  * @route   GET /api/categories
  * @desc    Retrieve all categories
  * @access  Private(admin)

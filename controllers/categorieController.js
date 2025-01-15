@@ -1,5 +1,87 @@
+// External imports
+const mongoose = require("mongoose");
+
 // Internal imports
 const Categorie = require("../models/Categorie");
+
+/**
+ * @route   GET /api/categories/parent
+ * @desc    Retrieve all parent categories
+ * @access  Public
+ */
+exports.getAllParentCategories = async (req, res) => {
+  try {
+    const { featured } = req.query;
+
+    const query = {
+      parent_categorie: null,
+      status: "published",
+    };
+
+    // filter by featured categorie
+    if (featured) {
+      query.featured_categorie = { $regex: featured, $options: "i" };
+    }
+
+    const categories = await Categorie.find(query)
+      .select("-updatedAt -createdAt -email -status")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      message: "Parent categories fetch successfully",
+      data: categories,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to fetch parent categories" });
+  }
+};
+
+/**
+ * @route   GET /api/categories/:parentId/children
+ * @desc    Retrieve all children categories of any parent categorie
+ * @access  Public
+ */
+exports.getAllChildrenCategories = async (req, res) => {
+  try {
+    const { featured } = req.query;
+    const { parentId } = req.params;
+
+    // validate parentId
+    if (!mongoose.Types.ObjectId.isValid(parentId)) {
+      return res.status(500).json({
+        success: false,
+        message: "Invalid parent categorie id format",
+      });
+    }
+
+    const query = {
+      parent_categorie: parentId,
+      status: "published",
+    };
+
+    // filter by featured categorie
+    if (featured) {
+      query.featured_categorie = { $regex: featured, $options: "i" };
+    }
+
+    const categories = await Categorie.find(query)
+      .select("-updatedAt -createdAt -email -status")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      message: "Children categories fetch successfully",
+      data: categories,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to fetch children categories" });
+  }
+};
 
 /**
  * @route   GET /api/categories
@@ -38,7 +120,7 @@ exports.getAllCategories = async (req, res) => {
     }
 
     // the sort object
-    const sortOptions = {};
+    const sortOptions = { createdAt: -1 };
 
     if (sort) {
       if (sort.toLowerCase() === "newest") {
@@ -83,7 +165,9 @@ exports.getAllCategoriesList = async (req, res) => {
   try {
     const categories_list = await Categorie.find({
       status: "published",
-    }).select("_id categorie_name");
+    })
+      .select("_id categorie_name")
+      .sort({ createdAt: -1 });
 
     // modify data
     const modified_categories_list = categories_list?.map(
