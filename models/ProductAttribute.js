@@ -31,6 +31,15 @@ const productAttributesSchema = new Schema(
         message: "At least one attribute value is required.",
       },
     },
+    priority_number: {
+      type: Number,
+      min: [0, "Priority number must be at least 0"],
+      default: 0,
+      validate: {
+        validator: Number.isInteger,
+        message: "Priority number must be an integer",
+      },
+    },
     global_attributes: {
       type: String,
       enum: {
