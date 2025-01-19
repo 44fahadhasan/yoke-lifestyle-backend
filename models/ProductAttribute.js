@@ -40,7 +40,7 @@ const productAttributesSchema = new Schema(
         message: "Priority number must be an integer",
       },
     },
-    global_attributes: {
+    global_attribute: {
       type: String,
       enum: {
         values: ["yes", "no"],
@@ -48,10 +48,18 @@ const productAttributesSchema = new Schema(
       },
       default: "yes",
     },
-    category_specific_attributes: {
+    category_specific_attribute: {
       type: Schema.Types.ObjectId,
       ref: "Categorie",
       default: null,
+    },
+    status: {
+      type: String,
+      enum: {
+        values: ["published", "archived", "draft"],
+        message: 'Status must be either "published", "archived", or "draft".',
+      },
+      default: "published",
     },
     email: {
       type: String,

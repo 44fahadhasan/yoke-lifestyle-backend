@@ -16,8 +16,8 @@ const router = express.Router();
  */
 router.get(
   "/",
-  // authenticateToken,
-  // checkIfAdmin,
+  authenticateToken,
+  checkIfAdmin,
   productAttributesController.getAllProductAttributes
 );
 
@@ -28,8 +28,8 @@ router.get(
  */
 router.post(
   "/",
-  // authenticateToken,
-  // checkIfAdmin,
+  authenticateToken,
+  checkIfAdmin,
   productAttributesController.createProductAttribute
 );
 
@@ -40,8 +40,8 @@ router.post(
  */
 router.put(
   "/:id",
-  // authenticateToken,
-  // checkIfAdmin,
+  authenticateToken,
+  checkIfAdmin,
   productAttributesController.updateProductAttribute
 );
 
@@ -52,8 +52,8 @@ router.put(
  */
 router.delete(
   "/:id",
-  // authenticateToken,
-  // checkIfAdmin,
+  authenticateToken,
+  checkIfAdmin,
   productAttributesController.deleteProductAttribute
 );
 
