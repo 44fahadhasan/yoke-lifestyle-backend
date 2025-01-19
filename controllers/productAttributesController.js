@@ -8,11 +8,58 @@ const ProductAttribute = require("../models/ProductAttribute");
  */
 exports.getAllProductAttributes = async (req, res) => {
   try {
-    const productAttributes = await ProductAttribute.find();
+    // destructure query parameters with default values
+    const { search, status, sort, page = 0, size = 6 } = req.query;
+
+    // pagination settings
+    const perPageAttributes = parseInt(size);
+    const currentPage = parseInt(page);
+    const skipAttributes = currentPage * perPageAttributes;
+
+    // the query object
+    const query = {};
+
+    // search by search text (attribute or categorie name)
+    if (search) {
+      query.$or = [
+        { attribute_name: { $regex: search, $options: "i" } },
+        { categorie_name: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    // filter by status
+    if (status) {
+      query.status = { $regex: status, $options: "i" };
+    }
+
+    // the sort object
+    const sortOptions = { createdAt: -1 };
+
+    if (sort) {
+      if (sort.toLowerCase() === "newest") {
+        sortOptions.createdAt = -1;
+      }
+      if (sort.toLowerCase() === "oldest") {
+        sortOptions.createdAt = 1;
+      }
+    }
+
+    // find attributes with pagination
+    const productAttributes = await ProductAttribute.find(query)
+      .select(
+        "_id attribute_name global_attribute categorie_name priority_number status createdAt"
+      )
+      .sort(sortOptions)
+      .skip(skipAttributes)
+      .limit(perPageAttributes);
+
+    // count total attributes matching the query
+    const totalAttributesNumber = await ProductAttribute.countDocuments(query);
 
     res.status(200).json({
       success: true,
       message: "Product attributes fetch successfully",
+      totalAttributes: totalAttributesNumber,
       data: productAttributes,
     });
   } catch (error) {

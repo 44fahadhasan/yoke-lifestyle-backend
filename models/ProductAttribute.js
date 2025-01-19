@@ -53,6 +53,11 @@ const productAttributesSchema = new Schema(
       ref: "Categorie",
       default: null,
     },
+    categorie_name: {
+      type: String,
+      trim: true,
+      default: null,
+    },
     status: {
       type: String,
       enum: {
