@@ -25,7 +25,7 @@ exports.getAllParentCategories = async (req, res) => {
 
     const categories = await Categorie.find(query)
       .select("-updatedAt -createdAt -email -status")
-      .sort({ createdAt: -1 });
+      .sort({ priority_number: -1 });
 
     res.status(200).json({
       success: true,
@@ -69,7 +69,7 @@ exports.getAllChildrenCategories = async (req, res) => {
 
     const categories = await Categorie.find(query)
       .select("-updatedAt -createdAt -email -status")
-      .sort({ createdAt: -1 });
+      .sort({ priority_number: -1 });
 
     res.status(200).json({
       success: true,

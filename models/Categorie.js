@@ -53,6 +53,15 @@ const categoriesSchema = new Schema(
       type: String,
       trim: true,
     },
+    priority_number: {
+      type: Number,
+      min: [0, "Priority number must be at least 0"],
+      default: 0,
+      validate: {
+        validator: Number.isInteger,
+        message: "Priority number must be an integer",
+      },
+    },
     parent_categorie: {
       type: Schema.Types.ObjectId,
       ref: "Categorie",
