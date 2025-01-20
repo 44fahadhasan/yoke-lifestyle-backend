@@ -40,13 +40,13 @@ const productAttributesSchema = new Schema(
         message: "Priority number must be an integer",
       },
     },
-    global_attribute: {
+    availability_scope: {
       type: String,
       enum: {
-        values: ["yes", "no"],
-        message: 'global attribute must be either "yes" or "no".',
+        values: ["global", "category"],
+        message: 'global attribute must be either "global" or "category".',
       },
-      default: "yes",
+      default: "global",
     },
     category_specific_attribute: {
       type: Schema.Types.ObjectId,

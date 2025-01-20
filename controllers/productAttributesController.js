@@ -13,13 +13,13 @@ exports.getAllGlobalProductAttributes = async (req, res) => {
   try {
     const query = {
       category_specific_attribute: null,
-      global_attribute: "yes",
+      availability_scope: "global",
       status: "published",
     };
 
     const global_attributes = await ProductAttribute.find(query)
       .select(
-        "-updatedAt -createdAt -email -status -global_attribute -category_specific_attribute -categorie_name -priority_number"
+        "-updatedAt -createdAt -email -status -availability_scope -category_specific_attribute -categorie_name -priority_number"
       )
       .sort({ priority_number: -1 });
 
@@ -55,13 +55,13 @@ exports.getAllCategorySpecificProductAttributes = async (req, res) => {
 
     const query = {
       category_specific_attribute: categoryId,
-      global_attribute: "no",
+      availability_scope: "category",
       status: "published",
     };
 
     const category_specific_attributes = await ProductAttribute.find(query)
       .select(
-        "-updatedAt -createdAt -email -status -global_attribute -category_specific_attribute -categorie_name -priority_number"
+        "-updatedAt -createdAt -email -status -availability_scope -category_specific_attribute -categorie_name -priority_number"
       )
       .sort({ priority_number: -1 });
 
@@ -86,7 +86,7 @@ exports.getAllCategorySpecificProductAttributes = async (req, res) => {
 exports.getAllProductAttributes = async (req, res) => {
   try {
     // destructure query parameters with default values
-    const { search, status, sort, page = 0, size = 6 } = req.query;
+    const { search, scope, status, sort, page = 0, size = 6 } = req.query;
 
     // pagination settings
     const perPageAttributes = parseInt(size);
@@ -102,6 +102,11 @@ exports.getAllProductAttributes = async (req, res) => {
         { attribute_name: { $regex: search, $options: "i" } },
         { categorie_name: { $regex: search, $options: "i" } },
       ];
+    }
+
+    // filter by availability scope
+    if (scope) {
+      query.availability_scope = { $regex: scope, $options: "i" };
     }
 
     // filter by status
@@ -124,7 +129,7 @@ exports.getAllProductAttributes = async (req, res) => {
     // find attributes with pagination
     const productAttributes = await ProductAttribute.find(query)
       .select(
-        "_id attribute_name global_attribute categorie_name priority_number status createdAt"
+        "_id attribute_name availability_scope categorie_name priority_number status createdAt"
       )
       .sort(sortOptions)
       .skip(skipAttributes)
