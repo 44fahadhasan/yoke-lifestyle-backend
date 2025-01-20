@@ -134,7 +134,7 @@ exports.getAllCategories = async (req, res) => {
     // find categories with pagination
     const categories = await Categorie.find(query)
       .select(
-        "_id categorie_name slug_name status featured_categorie createdAt"
+        "_id categorie_name slug_name priority_number status featured_categorie createdAt"
       )
       .sort(sortOptions)
       .skip(skipCategories)
