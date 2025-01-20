@@ -22,6 +22,18 @@ router.get(
 );
 
 /**
+ * @route   GET /api/product-attributes/details/:id
+ * @desc    Retrieve a single product attribute details by ID
+ * @access  Private(admin)
+ */
+router.get(
+  "/details/:id",
+  authenticateToken,
+  checkIfAdmin,
+  productAttributesController.getProductAttributeDetailstById
+);
+
+/**
  * @route   POST /api/product-attributes
  * @desc    Create a new product attribute
  * @access  Private(admin)

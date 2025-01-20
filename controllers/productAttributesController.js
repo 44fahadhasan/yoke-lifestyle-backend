@@ -70,6 +70,41 @@ exports.getAllProductAttributes = async (req, res) => {
 };
 
 /**
+ * @route   GET /api/product-attributes/details/:id
+ * @desc    Retrieve a single product attribute details by ID
+ * @access  Private(admin)
+ */
+exports.getProductAttributeDetailstById = async (req, res) => {
+  try {
+    const product_attribute = await ProductAttribute.findById(req.params.id);
+
+    if (!product_attribute) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Product attribute not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Product attribute fetch successfully",
+      data: product_attribute,
+    });
+  } catch (error) {
+    if (error.kind === "ObjectId") {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid product attribute ID format",
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch product attribute",
+    });
+  }
+};
+
+/**
  * @route   POST /api/product-attributes
  * @desc    Create a new product attribute
  * @access  Private(admin)
