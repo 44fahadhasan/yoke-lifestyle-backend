@@ -10,6 +10,26 @@ const { checkIfAdmin } = require("../middleware/common/authorization");
 const router = express.Router();
 
 /**
+ * @route   GET /api/product-attributes/global
+ * @desc    Retrieve all global product attributes
+ * @access  Public
+ */
+router.get(
+  "/global",
+  productAttributesController.getAllGlobalProductAttributes
+);
+
+/**
+ * @route   GET /api/product-attributes/category-specific/:categoryId
+ * @desc    Retrieve all category specific product attributes
+ * @access  Public
+ */
+router.get(
+  "/category-specific/:categoryId",
+  productAttributesController.getAllCategorySpecificProductAttributes
+);
+
+/**
  * @route   GET /api/product-attributes
  * @desc    Retrieve all product attributes
  * @access  Private(admin)

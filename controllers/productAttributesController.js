@@ -1,5 +1,82 @@
+// External imports
+const mongoose = require("mongoose");
+
 // Internal imports
 const ProductAttribute = require("../models/ProductAttribute");
+
+/**
+ * @route   GET /api/product-attributes/global
+ * @desc    Retrieve all global product attributes
+ * @access  Public
+ */
+exports.getAllGlobalProductAttributes = async (req, res) => {
+  try {
+    const query = {
+      category_specific_attribute: null,
+      global_attribute: "yes",
+      status: "published",
+    };
+
+    const global_attributes = await ProductAttribute.find(query)
+      .select(
+        "-updatedAt -createdAt -email -status -global_attribute -category_specific_attribute -categorie_name -priority_number"
+      )
+      .sort({ priority_number: -1 });
+
+    res.status(200).json({
+      success: true,
+      message: "Global product attributes fetch successfully",
+      data: global_attributes,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch global product attributes",
+    });
+  }
+};
+
+/**
+ * @route   GET /api/product-attributes/category-specific/:categoryId
+ * @desc    Retrieve all category specific product attributes
+ * @access  Public
+ */
+exports.getAllCategorySpecificProductAttributes = async (req, res) => {
+  try {
+    const { categoryId } = req.params;
+
+    // validate category Id
+    if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+      return res.status(500).json({
+        success: false,
+        message: "Invalid categorie id format",
+      });
+    }
+
+    const query = {
+      category_specific_attribute: categoryId,
+      global_attribute: "no",
+      status: "published",
+    };
+
+    const category_specific_attributes = await ProductAttribute.find(query)
+      .select(
+        "-updatedAt -createdAt -email -status -global_attribute -category_specific_attribute -categorie_name -priority_number"
+      )
+      .sort({ priority_number: -1 });
+
+    res.status(200).json({
+      success: true,
+      message: "Category specific product attributes fetch successfully",
+      data: category_specific_attributes,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch category specific product attributes",
+    });
+  }
+};
 
 /**
  * @route   GET /api/product-attributes
