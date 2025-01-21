@@ -13,6 +13,7 @@ const {
 } = require("./middleware/common/errorHandler");
 const connectDB = require("./config/database");
 const categorieRoutes = require("./routes/categorieRoutes");
+const tagRoutes = require("./routes/tagsRoutes");
 const productAttributesRoutes = require("./routes/productAttributesRoutes");
 const productRoutes = require("./routes/productRoutes");
 const OrderRoutes = require("./routes/OrderRoutes");
@@ -68,6 +69,9 @@ app.get("/", (req, res) => res.send("Yoke lifestyle Server Running"));
 
 // Categorie-related API routes
 app.use("/api/categories", categorieRoutes);
+
+// Tag-related API routes
+app.use("/api/tags", tagRoutes);
 
 // Product attribute-related API routes
 app.use("/api/product-attributes", productAttributesRoutes);
