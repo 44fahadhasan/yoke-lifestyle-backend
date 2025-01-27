@@ -74,11 +74,11 @@ app.use("/api/categories", categorieRoutes);
 // Tag-related API routes
 app.use("/api/tags", tagRoutes);
 
-// Brand-related API routes
-app.use("/api/brands", brandRoutes);
-
 // Product attribute-related API routes
 app.use("/api/product-attributes", productAttributesRoutes);
+
+// Brand-related API routes
+app.use("/api/brands", brandRoutes);
 
 // Product-related API routes
 app.use("/api/products", productRoutes);

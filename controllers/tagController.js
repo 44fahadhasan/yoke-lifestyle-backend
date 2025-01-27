@@ -179,7 +179,7 @@ exports.getAllTagsList = async (req, res) => {
       message: "Tags list fetch successfully",
       data: [
         {
-          label: "No Parent Tag",
+          label: "No Tag Selectd",
           value: null,
           _id: null,
         },
