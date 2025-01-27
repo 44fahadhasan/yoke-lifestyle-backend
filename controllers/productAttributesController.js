@@ -170,7 +170,10 @@ exports.getAllProductAttributesList = async (req, res) => {
         label: attribute_name,
         value: attribute_name,
         _id,
-        attribute_values,
+        attribute_values: attribute_values?.map(({ value }) => ({
+          value,
+          label: value,
+        })),
       })
     );
 
