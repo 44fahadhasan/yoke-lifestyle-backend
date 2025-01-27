@@ -152,6 +152,42 @@ exports.getAllProductAttributes = async (req, res) => {
 };
 
 /**
+ * @route   GET /api/product-attributes/list
+ * @desc    Retrieve all product attributes list
+ * @access  Private(admin)
+ */
+exports.getAllProductAttributesList = async (req, res) => {
+  try {
+    const attributes_list = await ProductAttribute.find({
+      status: "published",
+    })
+      .select("_id attribute_name attribute_values")
+      .sort({ createdAt: -1 });
+
+    // modify data
+    const modified_attributes_list = attributes_list?.map(
+      ({ attribute_name, _id, attribute_values }) => ({
+        label: attribute_name,
+        value: attribute_name,
+        _id,
+        attribute_values,
+      })
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Product attributes list fetch successfully",
+      data: modified_attributes_list,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch product attributes list",
+    });
+  }
+};
+
+/**
  * @route   GET /api/product-attributes/details/:id
  * @desc    Retrieve a single product attribute details by ID
  * @access  Private(admin)

@@ -42,6 +42,18 @@ router.get(
 );
 
 /**
+ * @route   GET /api/product-attributes/list
+ * @desc    Retrieve all product attributes list
+ * @access  Private(admin)
+ */
+router.get(
+  "/list",
+  authenticateToken,
+  checkIfAdmin,
+  productAttributesController.getAllProductAttributesList
+);
+
+/**
  * @route   GET /api/product-attributes/details/:id
  * @desc    Retrieve a single product attribute details by ID
  * @access  Private(admin)
