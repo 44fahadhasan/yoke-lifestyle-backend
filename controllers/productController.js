@@ -91,7 +91,7 @@ exports.createProduct = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ success: false, message: "Failed to create product" });
+      .json({ success: false, message: "Failed to create product", error });
   }
 };
 

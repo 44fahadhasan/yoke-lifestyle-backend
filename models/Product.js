@@ -26,7 +26,20 @@ const SubsectionSchema = new mongoose.Schema({
     id: { type: Number, required: [true, "Product id number is required"] },
   },
   attribute_name: { type: String, trim: true },
-  attribute_values: { type: [String] },
+  attribute_values: {
+    type: [
+      {
+        value: {
+          type: String,
+          required: true,
+        },
+        label: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+  },
 });
 
 // Define the variant schema
