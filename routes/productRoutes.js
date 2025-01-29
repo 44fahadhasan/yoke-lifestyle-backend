@@ -17,6 +17,18 @@ const router = express.Router();
 router.get("/", productController.getAllProducts);
 
 /**
+ * @route   GET /api/products/admin
+ * @desc    Retrieve all products
+ * @access  Private(admin)
+ */
+router.get(
+  "/admin",
+  authenticateToken,
+  checkIfAdmin,
+  productController.getAllProductsAdmin
+);
+
+/**
  * @route   GET /api/products/details/:id
  * @desc    Retrieve a single product details by ID
  * @access  Public

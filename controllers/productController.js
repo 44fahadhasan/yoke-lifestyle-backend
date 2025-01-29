@@ -41,6 +41,81 @@ exports.getAllProducts = async (req, res) => {
 };
 
 /**
+ * @route   GET /api/products/admin
+ * @desc    Retrieve all products
+ * @access  Private(admin)
+ */
+exports.getAllProductsAdmin = async (req, res) => {
+  try {
+    // destructure query parameters with default values
+    const { search, featured, status, sort, page = 0, size = 6 } = req.query;
+
+    // pagination settings
+    const perPageProducts = parseInt(size);
+    const currentPage = parseInt(page);
+    const skipProducts = currentPage * perPageProducts;
+
+    // the query object
+    const query = {};
+
+    // search by search text (category name or slug/path)
+    if (search) {
+      query.$or = [
+        { product_name: { $regex: search, $options: "i" } },
+        { product_brand: { $regex: search, $options: "i" } },
+        { product_category: { $regex: search, $options: "i" } },
+        { product_tag: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    // filter by featured product
+    if (featured) {
+      query.featured_product = { $regex: featured, $options: "i" };
+    }
+
+    // filter by status
+    if (status) {
+      query.status = { $regex: status, $options: "i" };
+    }
+
+    // the sort object
+    const sortOptions = { createdAt: -1 };
+
+    if (sort) {
+      if (sort.toLowerCase() === "newest") {
+        sortOptions.createdAt = -1;
+      }
+      if (sort.toLowerCase() === "oldest") {
+        sortOptions.createdAt = 1;
+      }
+    }
+
+    // find products with pagination
+    const products = await Product.find(query)
+      .select(
+        "_id product_name product_brand product_category product_tag variants discount_type discount_percentage status featured_product createdAt"
+      )
+      .sort(sortOptions)
+      .skip(skipProducts)
+      .limit(perPageProducts);
+
+    // count total products matching the query
+    const totalProductsNumber = await Product.countDocuments(query);
+
+    res.status(200).json({
+      success: true,
+      message: "Products fetch successfully",
+      totalProducts: totalProductsNumber,
+      data: products,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to fetch products" });
+  }
+};
+
+/**
  * @route   GET /api/products/details/:id
  * @desc    Retrieve a single product details by ID
  * @access  Public
