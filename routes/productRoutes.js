@@ -29,11 +29,16 @@ router.get(
 );
 
 /**
- * @route   GET /api/products/details/:id
+ * @route   GET /api/products/details/:id/admin
  * @desc    Retrieve a single product details by ID
- * @access  Public
+ * @access  Private(admin)
  */
-router.get("/details/:id", productController.getProductDetailstById);
+router.get(
+  "/details/:id/admin",
+  authenticateToken,
+  checkIfAdmin,
+  productController.getProductDetailstByIdAdmin
+);
 
 /**
  * @route   POST /api/products

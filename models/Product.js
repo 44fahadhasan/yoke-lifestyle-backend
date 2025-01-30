@@ -110,6 +110,9 @@ const productSchema = new mongoose.Schema(
     },
     discount_percentage: { type: Number, min: 0, max: 100 },
     variants: { type: [VariantSchema] },
+    product_description: { type: String },
+    additional_information: { type: String },
+    shipping_warranty: { type: String },
     meta_info: {
       type: [metaSchema],
     },

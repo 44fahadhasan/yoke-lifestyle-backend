@@ -116,11 +116,11 @@ exports.getAllProductsAdmin = async (req, res) => {
 };
 
 /**
- * @route   GET /api/products/details/:id
+ * @route   GET /api/products/details/:id/admin
  * @desc    Retrieve a single product details by ID
- * @access  Public
+ * @access  Private(admin)
  */
-exports.getProductDetailstById = async (req, res) => {
+exports.getProductDetailstByIdAdmin = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
 
