@@ -42,7 +42,7 @@ app.use(express.urlencoded({ extended: true }));
 // CORS configuration to control access to server resources
 const corsOptions = {
   origin: [
-    "https://www.yokelifestyle.sufizaproperty.com",
+    "https://yoke-lifestyle-client.vercel.app",
     "https://yokelifestyle.sufizaproperty.com",
     "http://localhost:3000",
   ], // Allowed origins
